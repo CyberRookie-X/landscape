@@ -2,6 +2,7 @@
 import { get_iface_cpu_balance, set_iface_cpu_balance } from "@/api/iface";
 import { IfaceCpuSoftBalance } from "@/rust_bindings/common/iface";
 import { ref } from "vue";
+import CpuCoreSelector from "./CpuCoreSelector.vue";
 
 const show_model = defineModel<boolean>("show", { required: true });
 const loading = ref(false);
@@ -50,16 +51,15 @@ async function save_config() {
     >
       <n-flex vertical>
         <n-alert type="info">
-          比如要将CPU 负载在 0 核心, 二进制是 1. 如果要负载在 1-2 核心, 二进制是
-          11 设置值为 3. 如果要负载在 2-3 核心, 二进制是 110 设置为 6. 以此类推.
-          重置设置为 0
+          通过点击CPU核心编号来选择对应的CPU核心进行负载均衡配置。例如：
+          要将负载分配给0号核心，点击"0"；要将负载分配给0、1、2号核心，分别点击"0"、"1"、"2"。
         </n-alert>
         <n-form v-if="balance_config" :model="balance_config">
           <n-form-item label="发送核心负载">
-            <n-input v-model:value="balance_config.xps"></n-input>
+            <CpuCoreSelector v-model="balance_config.xps" />
           </n-form-item>
           <n-form-item label="接收核心负载">
-            <n-input v-model:value="balance_config.rps"></n-input>
+            <CpuCoreSelector v-model="balance_config.rps" />
           </n-form-item>
         </n-form>
       </n-flex>
